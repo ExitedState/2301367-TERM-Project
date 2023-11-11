@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext'; // adjust the path as necessary
 import { collection, addDoc, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 import { firestore } from '../config/firebase'; // adjust the path as necessary
-
+import { ListGroup, Button, Row, Col, InputGroup, FormControl, Card } from 'react-bootstrap';
+import { GeoAlt, Map } from 'react-bootstrap-icons';
 const FindRoutes = () => {
     const { currentUser } = useAuth();
     const [startLocation, setStartLocation] = useState('');
@@ -53,6 +54,7 @@ const FindRoutes = () => {
         } catch (error) {
             console.error("Error adding document: ", error);
         }
+        redirectToGoogleMaps(startLocation, destination);
     };
 
     const handleUseCurrentLocation = () => {
@@ -66,33 +68,73 @@ const FindRoutes = () => {
         }
     };
 
+    const redirectToGoogleMaps = (start, destination) => {
+        const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=driving`;
+        window.open(googleMapsDirectionsUrl, '_blank');
+    };
+
+    const handleRecentSearchSelect = (search) => {
+        redirectToGoogleMaps(search.startLocation, search.destination);
+    };
+
     return (
         <div>
             <h1>Find Routes</h1>
-            <button onClick={handleUseCurrentLocation}>Use Current Location</button>
-            <input
-                type="text"
-                value={startLocation}
-                onChange={(e) => setStartLocation(e.target.value)}
-                placeholder="Start Location"
-                aria-label="Start Location"
-            />
-            <input
-                type="text"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                placeholder="Destination"
-                aria-label="Destination"
-            />
-            <button onClick={handleFindRoute}>Find Route</button>
-            <div>
-                <h2>Recent Searches</h2>
-                <ul>
-                    {recentSearches.map((search, index) => (
-                        <li key={index}>{`Start: ${search.startLocation}, Destination: ${search.destination}`}</li>
-                    ))}
-                </ul>
-            </div>
+            <Card className="my-3 mx-auto" style={{ maxWidth: '888px' }}>
+                <Card.Body>
+                    <InputGroup className="mb-3">
+                        <FormControl
+                            placeholder="Start Location"
+                            aria-label="Start Location"
+                            value={startLocation}
+                            onChange={(e) => setStartLocation(e.target.value)}
+                        />
+                        <Button variant="outline-secondary" onClick={(e) => {
+                            e.preventDefault();  // Prevent default button click behavior
+                            handleUseCurrentLocation();
+                        }}>
+                            <GeoAlt />
+                        </Button>
+                        <FormControl
+                            placeholder="Destination"
+                            aria-label="Destination"
+                            value={destination}
+                            onChange={(e) => setDestination(e.target.value)}
+                        />
+                        <Button variant="primary" onClick={handleFindRoute}>
+                            Find Route
+                        </Button>
+                    </InputGroup>
+                    <h2>Recent Searches</h2>
+                    <ListGroup>
+                        {recentSearches.map((search, index) => (
+                            <ListGroup.Item
+                                key={index}
+                                action
+                                onClick={() => handleRecentSearchSelect(search)}
+                                className="d-flex align-items-center"
+                            >
+                                <Row noGutters className="w-100">
+                                    <Col xs={12} className="d-flex align-items-center">
+                                        <GeoAlt className="me-2" />
+                                        <div className="flex-fill">
+                                            <div className="fw-bold">From:</div>
+                                            <span>{search.startLocation}</span>
+                                        </div>
+                                    </Col>
+                                    <Col xs={12} className="d-flex align-items-center my-2">
+                                        <Map className="me-2" />
+                                        <div className="flex-fill">
+                                            <div className="fw-bold">To:</div>
+                                            <span>{search.destination}</span>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </ListGroup.Item>
+                        ))}
+                    </ListGroup>
+                </Card.Body>
+            </Card>
         </div>
     );
 };
