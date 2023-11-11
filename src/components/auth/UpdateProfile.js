@@ -2,14 +2,14 @@ import React, { useRef, useState } from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, updateEmail, updatePassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { updateEmail, updatePassword } from "firebase/auth";
+// import { auth } from "../../config/firebase";
 
 export default function UpdateProfile() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const auth = getAuth(); // Get the auth instance using the modular SDK
+  //! const auth = getAuth(); // Get the auth instance using the modular SDK.
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState("");

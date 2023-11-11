@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from '../components/auth/Login';
 import Signup from '../components/auth/Signup';
-import Dashboard from '../components/Dashboard';
+// import Dashboard from '../components/Dashboard';
 import ForgotPassword from '../components/auth/ForgotPassword';
 import PrivateRoute from '../components/shared/PrivateRoute';
 import UpdateProfile from '../components/auth/UpdateProfile';
+import MainPage from '../components/MainPage';
 
 const AppRoutes = () => {
     return (
@@ -20,9 +21,7 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 } />
                 <Route path="/" element={
-                    <PrivateRoute>
-                        <Dashboard />
-                    </PrivateRoute>
+                    <MainPage />
                 } />
                 {/* Add more routes as needed */}
             </Routes>
