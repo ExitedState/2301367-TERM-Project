@@ -7,6 +7,8 @@ import ForgotPassword from '../components/auth/ForgotPassword';
 import PrivateRoute from '../components/shared/PrivateRoute';
 import UpdateProfile from '../components/auth/UpdateProfile';
 import MainPage from '../components/MainPage';
+import FavoRoute from '../components/FavoRoute';
+import FindRoute from '../components/FindRoute';
 const AppRoutes = () => {
     return (
         <Router>
@@ -20,6 +22,12 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 } />
                 <Route path="/" element={<MainPage />} />
+                <Route path="/favoRoute" element={<FavoRoute />} />
+                <Route path="/findRoute" element={
+                    <PrivateRoute>
+                        <FindRoute />
+                    </PrivateRoute>
+                } />
                 <Route path="*" element={<h1>Not Found</h1>} />
             </Routes>
         </Router>
