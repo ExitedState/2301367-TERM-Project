@@ -6,9 +6,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ForgotPassword from "./components/ForgotPassword";
 import Login from "./components/Login";
-import PrivateRoute from "./components/PrivateRoute";
-import Dashboard from "./components/Dashboard";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {
