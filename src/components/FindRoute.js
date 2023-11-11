@@ -46,7 +46,7 @@ const FindRoutes = () => {
             await addDoc(collection(firestore, 'recentSearches'), newSearch);
 
             // Update local state
-            setRecentSearches(prevSearches => [newSearch, ...prevSearches].slice(0, 5));
+            setRecentSearches(prevSearches => [newSearch, ...prevSearches].slice(0, 8));
 
             // Direct to Google Maps
             const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${startLocation}&destination=${destination}&travelmode=driving`;
@@ -114,16 +114,16 @@ const FindRoutes = () => {
                                 onClick={() => handleRecentSearchSelect(search)}
                                 className="d-flex align-items-center"
                             >
-                                <Row noGutters className="w-100">
-                                    <Col xs={12} className="d-flex align-items-center">
-                                        <GeoAlt className="me-2" />
+                                <Row className="w-100">
+                                    <Col xs={12} md={6} className="d-flex align-items-center">
+                                        <GeoAlt className="icon-style me-2" />
                                         <div className="flex-fill">
                                             <div className="fw-bold">From:</div>
                                             <span>{search.startLocation}</span>
                                         </div>
                                     </Col>
-                                    <Col xs={12} className="d-flex align-items-center my-2">
-                                        <Map className="me-2" />
+                                    <Col xs={12} md={6} className="d-flex align-items-center mt-2 mt-md-0">
+                                        <Map className="icon-style me-2" />
                                         <div className="flex-fill">
                                             <div className="fw-bold">To:</div>
                                             <span>{search.destination}</span>
