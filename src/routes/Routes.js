@@ -22,9 +22,15 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 } />
                 <Route path="/" element={<MainPage />} />
-                <Route path="/favoRoute" element={<FavoRoute />} />
+                <Route path="/favoRoute" element={
+                    <PrivateRoute>
+                        <FavoRoute />
+                    </PrivateRoute>
+                } />
                 <Route path="/findRoute" element={
+                    <PrivateRoute>
                         <FindRoute />
+                    </PrivateRoute>
                 } />
                 <Route path="*" element={<h1>Not Found</h1>} />
             </Routes>

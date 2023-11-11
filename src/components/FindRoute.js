@@ -1,9 +1,10 @@
 // filename: FindRoute.js
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext'; // adjust the path as necessary
-import { collection, addDoc, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, orderBy, limit, updateDoc, doc } from 'firebase/firestore';
 import { firestore } from '../config/firebase'; // adjust the path as necessary
-
+import { ListGroup, Button, Row, Col, InputGroup, FormControl, Card } from 'react-bootstrap';
+import { GeoAlt, Map } from 'react-bootstrap-icons';
 const FindRoutes = () => {
     const { currentUser } = useAuth();
     const [startLocation, setStartLocation] = useState('');
@@ -23,7 +24,10 @@ const FindRoutes = () => {
             // Execute the query
             getDocs(searchesQuery)
                 .then(querySnapshot => {
-                    const searches = querySnapshot.docs.map(doc => doc.data());
+                    const searches = querySnapshot.docs.map(doc => ({
+                        ...doc.data(),
+                        id: doc.id  // Capture the document ID
+                    }));
                     setRecentSearches(searches);
                 })
                 .catch(error => {
@@ -37,7 +41,8 @@ const FindRoutes = () => {
             userId: currentUser.uid,
             startLocation,
             destination,
-            timestamp: new Date()
+            timestamp: new Date(),
+            isFavorite: false
         };
 
         try {
@@ -45,7 +50,7 @@ const FindRoutes = () => {
             await addDoc(collection(firestore, 'recentSearches'), newSearch);
 
             // Update local state
-            setRecentSearches(prevSearches => [newSearch, ...prevSearches].slice(0, 5));
+            setRecentSearches(prevSearches => [newSearch, ...prevSearches].slice(0, 8));
 
             // Direct to Google Maps
             const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${startLocation}&destination=${destination}&travelmode=driving`;
@@ -53,6 +58,7 @@ const FindRoutes = () => {
         } catch (error) {
             console.error("Error adding document: ", error);
         }
+        redirectToGoogleMaps(startLocation, destination);
     };
 
     const handleUseCurrentLocation = () => {
@@ -66,33 +72,99 @@ const FindRoutes = () => {
         }
     };
 
+    const redirectToGoogleMaps = (start, destination) => {
+        const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=driving`;
+        window.open(googleMapsDirectionsUrl, '_blank');
+    };
+
+    const handleRecentSearchSelect = (search) => {
+        redirectToGoogleMaps(search.startLocation, search.destination);
+    };
+
+    const toggleFavorite = async (search, index) => {
+        // Create a reference to the Firestore document
+        const searchRef = doc(firestore, 'recentSearches', search.id); // Correct usage of the doc function
+
+        try {
+            await updateDoc(searchRef, {
+                isFavorite: !search.isFavorite
+            });
+            // Optimistically update the local state
+            setRecentSearches(recentSearches.map((item, idx) =>
+                idx === index ? { ...item, isFavorite: !item.isFavorite } : item
+            ));
+        } catch (error) {
+            console.error("Error updating favorite status: ", error);
+        }
+    };
+
     return (
         <div>
             <h1>Find Routes</h1>
-            <button onClick={handleUseCurrentLocation}>Use Current Location</button>
-            <input
-                type="text"
-                value={startLocation}
-                onChange={(e) => setStartLocation(e.target.value)}
-                placeholder="Start Location"
-                aria-label="Start Location"
-            />
-            <input
-                type="text"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                placeholder="Destination"
-                aria-label="Destination"
-            />
-            <button onClick={handleFindRoute}>Find Route</button>
-            <div>
-                <h2>Recent Searches</h2>
-                <ul>
-                    {recentSearches.map((search, index) => (
-                        <li key={index}>{`Start: ${search.startLocation}, Destination: ${search.destination}`}</li>
-                    ))}
-                </ul>
-            </div>
+            <Card className="my-3 mx-auto" style={{ maxWidth: '888px' }}>
+                <Card.Body>
+                    <InputGroup className="mb-3">
+                        <FormControl
+                            placeholder="Start Location"
+                            aria-label="Start Location"
+                            value={startLocation}
+                            onChange={(e) => setStartLocation(e.target.value)}
+                        />
+                        <Button variant="outline-secondary" onClick={(e) => {
+                            e.preventDefault();  // Prevent default button click behavior
+                            handleUseCurrentLocation();
+                        }}>
+                            <GeoAlt />
+                        </Button>
+                        <FormControl
+                            placeholder="Destination"
+                            aria-label="Destination"
+                            value={destination}
+                            onChange={(e) => setDestination(e.target.value)}
+                        />
+                        <Button variant="primary" onClick={handleFindRoute}>
+                            Find Route
+                        </Button>
+                    </InputGroup>
+                    <h2>Recent Searches</h2>
+                    <ListGroup>
+                        {recentSearches.map((search, index) => (
+                            <ListGroup.Item
+                                key={search.id || index}
+                                className="d-flex justify-content-between align-items-center"
+                            >
+                                <div onClick={() => handleRecentSearchSelect(search)} style={{ flex: 1, cursor: 'pointer' }}>
+                                    <Row className="w-100">
+                                        <Col xs={12} md={6} className="d-flex align-items-center">
+                                            <GeoAlt className="icon-style me-2" />
+                                            <div className="flex-fill">
+                                                <div className="fw-bold">From:</div>
+                                                <span>{search.startLocation}</span>
+                                            </div>
+                                        </Col>
+                                        <Col xs={12} md={6} className="d-flex align-items-center mt-2 mt-md-0">
+                                            <Map className="icon-style me-2" />
+                                            <div className="flex-fill">
+                                                <div className="fw-bold">To:</div>
+                                                <span>{search.destination}</span>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </div>
+                                <Button
+                                    variant={search.isFavorite ? "warning" : "outline-warning"}
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Prevent the list item's onClick from being called
+                                        toggleFavorite(search, index);
+                                    }}
+                                >
+                                    {search.isFavorite ? 'Unfavorite' : 'Favorite'}
+                                </Button>
+                            </ListGroup.Item>
+                        ))}
+                    </ListGroup>
+                </Card.Body>
+            </Card>
         </div>
     );
 };
