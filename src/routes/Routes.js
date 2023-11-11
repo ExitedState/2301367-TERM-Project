@@ -8,7 +8,7 @@ import ForgotPassword from '../components/auth/ForgotPassword';
 import PrivateRoute from '../components/shared/PrivateRoute';
 import UpdateProfile from '../components/auth/UpdateProfile';
 import MainPage from '../components/MainPage';
-
+import Dashboard from '../components/Dashboard';
 const AppRoutes = () => {
     return (
         <Router>
@@ -22,7 +22,12 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 } />
                 <Route path="/" element={<MainPage />} />
-                {/* Add more routes as needed */}
+                <Route path="/dashboard" element={
+                    // <PrivateRoute>
+                        <Dashboard />
+                    // </PrivateRoute>
+                } />
+                <Route path="*" element={<h1>Not Found</h1>} />
             </Routes>
         </Router>
     );
