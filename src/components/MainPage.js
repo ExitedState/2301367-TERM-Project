@@ -1,10 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, Container, Row, Col, Card } from 'react-bootstrap';
+import { useAuth } from '../contexts/AuthContext'; // Adjust the path as necessary
 
 export default function MainPage() {
+    const { currentUser, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/');
+        } catch (error) {
+            console.error("Failed to log out", error);
+            // Handle logout error (e.g., show an error message)
+        }
+    };
+
     return (
         <Container>
+            {/* ... other components ... */}
+
             <Row className="justify-content-md-center mt-5">
                 <Col md={6} className="text-center">
                     <Card>
@@ -13,30 +29,25 @@ export default function MainPage() {
                             <Card.Text>
                                 Ensuring accessible bus travel for everyone.
                             </Card.Text>
-                            <Link to="/login">
-                                <Button variant="primary" size="lg" className="m-2">Login</Button>
-                            </Link>
-                            <Link to="/signup">
-                                <Button variant="success" size="lg" className="m-2">Register</Button>
-                            </Link>
+                            {!currentUser && (
+                                <>
+                                    <Link to="/login">
+                                        <Button variant="primary" size="lg" className="m-2">Login</Button>
+                                    </Link>
+                                    <Link to="/signup">
+                                        <Button variant="success" size="lg" className="m-2">Register</Button>
+                                    </Link>
+                                </>
+                            )}
+                            {currentUser && (
+                                <Button variant="danger" size="lg" className="m-2" onClick={handleLogout}>Logout</Button>
+                            )}
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
-            <Row className="mt-4">
-                <Col md={12}>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title as="h2">About AccessiBus</Card.Title>
-                            <Card.Text>
-                                AccessiBus is dedicated to providing a comfortable and reliable bus service for people with disabilities. Our services are designed to be inclusive, with features such as...
-                            </Card.Text>
-                            {/* Add more information as needed */}
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-            {/* Additional sections can be added here */}
+
+            {/* ... other components ... */}
         </Container>
     );
 }
