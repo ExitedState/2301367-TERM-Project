@@ -1,21 +1,22 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Button, Container, Row, Col, Card } from 'react-bootstrap';
+import { Button, Container, Row, Col, Card } from 'react-bootstrap';
+import { Toast, ToastContainer } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext'; // Adjust the path as necessary
 
 export default function MainPage() {
     const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
-    const [logoutError, setLogoutError] = useState("");
+    const [showToast, setShowToast] = useState(false);
 
     const handleLogout = async () => {
         try {
             await logout();
+            setShowToast(true);
             navigate('/');
         } catch (error) {
             console.error("Failed to log out", error);
             // Handle logout error (e.g., show an error message)
-            setLogoutError("Failed to log out. Please try again.");
         }
     };
 
@@ -43,18 +44,30 @@ export default function MainPage() {
                             )}
                             {currentUser && (
                                 <>
-                                {logoutError && <Alert variant="danger">{logoutError}</Alert>}
-                                <Button variant="danger" size="lg" className="m-2" onClick={handleLogout}>Logout</Button>
-                                <Link to="/update-profile">
-                                    <Button variant="primary" size="lg" className="m-2">Profile</Button>
-                                </Link>
+                                    <Button variant="danger" size="lg" className="m-2" onClick={handleLogout}>Logout</Button>
+                                    <Link to="/update-profile">
+                                        <Button variant="primary" size="lg" className="m-2">Profile</Button>
+                                    </Link>
                                 </>
                             )}
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
-
+            {/* Toast Container for logout success message */}
+            <ToastContainer position="top-start">
+                <Toast
+                    onClose={() => setShowToast(false)}
+                    show={showToast}
+                    delay={3000}
+                    autohide
+                >
+                    <Toast.Header>
+                        <strong className="me-auto">Logout Successful</strong>
+                    </Toast.Header>
+                    <Toast.Body>You have been logged out.</Toast.Body>
+                </Toast>
+            </ToastContainer>
             {/* ... other components ... */}
         </Container>
     );
