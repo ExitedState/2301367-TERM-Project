@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { auth } from "../../config/firebase";
 
 export default function ForgotPassword() {
   const emailRef = useRef();
@@ -44,7 +44,7 @@ export default function ForgotPassword() {
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required />
             </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
+            <Button disabled={loading} className="w-100 mt-3" type="submit">
               Reset Password
             </Button>
           </Form>

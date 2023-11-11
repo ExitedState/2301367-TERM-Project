@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, updateEmail, updatePassword } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { auth } from "../../config/firebase";
 
 export default function UpdateProfile() {
   const emailRef = useRef();
@@ -75,7 +75,7 @@ export default function UpdateProfile() {
                 placeholder="Leave blank to keep the same"
               />
             </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
+            <Button disabled={loading} className="w-100 mt-3" type="submit">
               Update
             </Button>
           </Form>
