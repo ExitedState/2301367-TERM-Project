@@ -1,3 +1,4 @@
+// Filename: Routes.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from '../components/auth/Login';
@@ -20,9 +21,7 @@ const AppRoutes = () => {
                         <UpdateProfile />
                     </PrivateRoute>
                 } />
-                <Route path="/" element={
-                    <MainPage />
-                } />
+                <Route path="/" element={<MainPage />} />
                 {/* Add more routes as needed */}
             </Routes>
         </Router>

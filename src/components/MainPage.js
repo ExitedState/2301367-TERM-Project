@@ -40,7 +40,12 @@ export default function MainPage() {
                                 </>
                             )}
                             {currentUser && (
+                                <>
                                 <Button variant="danger" size="lg" className="m-2" onClick={handleLogout}>Logout</Button>
+                                <Link to="/update-profile">
+                                    <Button variant="primary" size="lg" className="m-2">Profile</Button>
+                                </Link>
+                                </>
                             )}
                         </Card.Body>
                     </Card>
