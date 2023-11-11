@@ -3,12 +3,10 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from '../components/auth/Login';
 import Signup from '../components/auth/Signup';
-// import Dashboard from '../components/Dashboard';
 import ForgotPassword from '../components/auth/ForgotPassword';
 import PrivateRoute from '../components/shared/PrivateRoute';
 import UpdateProfile from '../components/auth/UpdateProfile';
 import MainPage from '../components/MainPage';
-
 const AppRoutes = () => {
     return (
         <Router>
@@ -22,7 +20,7 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 } />
                 <Route path="/" element={<MainPage />} />
-                {/* Add more routes as needed */}
+                <Route path="*" element={<h1>Not Found</h1>} />
             </Routes>
         </Router>
     );
