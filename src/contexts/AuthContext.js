@@ -1,7 +1,7 @@
 // contexts/AuthContext.js
 import { createContext, useContext, useState, useEffect } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth';
-import { auth, app } from '../config/firebase';
+import { auth } from '../config/firebase';
 
 const AuthContext = createContext();
 const authInstance = auth;
@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
     });
 
     return unsubscribe;
-  }, [authInstance]);
+  });
 
   const value = {
     currentUser,
