@@ -62,15 +62,6 @@ export default function UpdateProfile() {
               <h2 className="text-center mb-4">Update Profile</h2>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
-                <Form.Group id="current-password">
-                  <Form.Label>Current Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    ref={currentPasswordRef}
-                    required
-                    placeholder="Enter current password"
-                  />
-                </Form.Group>
                 <Form.Group id="email">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
@@ -78,6 +69,17 @@ export default function UpdateProfile() {
                     ref={emailRef}
                     required
                     defaultValue={currentUser.email}
+                    readOnly
+                    style={{ backgroundColor: '#e9ecef' }}
+                  />
+                </Form.Group>
+                <Form.Group id="current-password">
+                  <Form.Label>Current Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    ref={currentPasswordRef}
+                    required
+                    placeholder="Enter current password"
                   />
                 </Form.Group>
                 <Form.Group id="password">
@@ -96,17 +98,27 @@ export default function UpdateProfile() {
                     placeholder="Leave blank to keep the same"
                   />
                 </Form.Group>
-                <Button disabled={loading} className="w-100 mt-3" type="submit">
+                <Button disabled={loading} className="w-100 mt-3" type="submit" variant="primary">
                   Update
                 </Button>
               </Form>
+              <div className="w-100 text-center mt-2">
+                <Button
+                  variant="secondary"
+                  className="w-100"
+                  as={Link}
+                  to="/"
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
+              </div>
             </Card.Body>
           </div>
         </Container>
+
       </Card>
-      <div className="w-100 text-center mt-2">
-        <Link to="/">Cancel</Link>
-      </div>
+
     </>
   );
 }
