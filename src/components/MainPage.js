@@ -44,10 +44,16 @@ export default function MainPage() {
                             )}
                             {currentUser && (
                                 <>
-                                    <Button variant="danger" size="lg" className="m-2" onClick={handleLogout}>Logout</Button>
-                                    <Link to="/update-profile">
-                                        <Button variant="primary" size="lg" className="m-2">Profile</Button>
+                                    <Link to="/findRoute">
+                                        <Button variant="primary" size="lg" className="m-2">FindBus</Button>
                                     </Link>
+                                    <Link to="/favoRoute">
+                                        <Button variant="primary" size="lg" className="m-2">Favorite</Button>
+                                    </Link>
+                                    <Link to="/update-profile">
+                                        <Button variant="info" size="lg" className="m-2">Profile</Button>
+                                    </Link>
+                                    <Button variant="danger" size="lg" className="m-2" onClick={handleLogout}>Logout</Button>
                                 </>
                             )}
                         </Card.Body>
