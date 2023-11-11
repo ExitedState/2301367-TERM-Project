@@ -1,7 +1,7 @@
 // filename: FindRoute.js
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext'; // adjust the path as necessary
-import { collection, addDoc, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, orderBy, limit, updateDoc, doc } from 'firebase/firestore';
 import { firestore } from '../config/firebase'; // adjust the path as necessary
 import { ListGroup, Button, Row, Col, InputGroup, FormControl, Card } from 'react-bootstrap';
 import { GeoAlt, Map } from 'react-bootstrap-icons';
@@ -24,7 +24,10 @@ const FindRoutes = () => {
             // Execute the query
             getDocs(searchesQuery)
                 .then(querySnapshot => {
-                    const searches = querySnapshot.docs.map(doc => doc.data());
+                    const searches = querySnapshot.docs.map(doc => ({
+                        ...doc.data(),
+                        id: doc.id  // Capture the document ID
+                    }));
                     setRecentSearches(searches);
                 })
                 .catch(error => {
@@ -38,7 +41,8 @@ const FindRoutes = () => {
             userId: currentUser.uid,
             startLocation,
             destination,
-            timestamp: new Date()
+            timestamp: new Date(),
+            isFavorite: false
         };
 
         try {
@@ -77,6 +81,23 @@ const FindRoutes = () => {
         redirectToGoogleMaps(search.startLocation, search.destination);
     };
 
+    const toggleFavorite = async (search, index) => {
+        // Create a reference to the Firestore document
+        const searchRef = doc(firestore, 'recentSearches', search.id); // Correct usage of the doc function
+
+        try {
+            await updateDoc(searchRef, {
+                isFavorite: !search.isFavorite
+            });
+            // Optimistically update the local state
+            setRecentSearches(recentSearches.map((item, idx) =>
+                idx === index ? { ...item, isFavorite: !item.isFavorite } : item
+            ));
+        } catch (error) {
+            console.error("Error updating favorite status: ", error);
+        }
+    };
+
     return (
         <div>
             <h1>Find Routes</h1>
@@ -109,27 +130,36 @@ const FindRoutes = () => {
                     <ListGroup>
                         {recentSearches.map((search, index) => (
                             <ListGroup.Item
-                                key={index}
-                                action
-                                onClick={() => handleRecentSearchSelect(search)}
-                                className="d-flex align-items-center"
+                                key={search.id || index}
+                                className="d-flex justify-content-between align-items-center"
                             >
-                                <Row className="w-100">
-                                    <Col xs={12} md={6} className="d-flex align-items-center">
-                                        <GeoAlt className="icon-style me-2" />
-                                        <div className="flex-fill">
-                                            <div className="fw-bold">From:</div>
-                                            <span>{search.startLocation}</span>
-                                        </div>
-                                    </Col>
-                                    <Col xs={12} md={6} className="d-flex align-items-center mt-2 mt-md-0">
-                                        <Map className="icon-style me-2" />
-                                        <div className="flex-fill">
-                                            <div className="fw-bold">To:</div>
-                                            <span>{search.destination}</span>
-                                        </div>
-                                    </Col>
-                                </Row>
+                                <div onClick={() => handleRecentSearchSelect(search)} style={{ flex: 1, cursor: 'pointer' }}>
+                                    <Row className="w-100">
+                                        <Col xs={12} md={6} className="d-flex align-items-center">
+                                            <GeoAlt className="icon-style me-2" />
+                                            <div className="flex-fill">
+                                                <div className="fw-bold">From:</div>
+                                                <span>{search.startLocation}</span>
+                                            </div>
+                                        </Col>
+                                        <Col xs={12} md={6} className="d-flex align-items-center mt-2 mt-md-0">
+                                            <Map className="icon-style me-2" />
+                                            <div className="flex-fill">
+                                                <div className="fw-bold">To:</div>
+                                                <span>{search.destination}</span>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </div>
+                                <Button
+                                    variant={search.isFavorite ? "warning" : "outline-warning"}
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Prevent the list item's onClick from being called
+                                        toggleFavorite(search, index);
+                                    }}
+                                >
+                                    {search.isFavorite ? 'Unfavorite' : 'Favorite'}
+                                </Button>
                             </ListGroup.Item>
                         ))}
                     </ListGroup>
