@@ -18,7 +18,7 @@ const FindRoutes = () => {
                 collection(firestore, 'recentSearches'),
                 where('userId', '==', currentUser.uid),
                 orderBy('timestamp', 'desc'),
-                limit(5)
+                limit(10)
             );
 
             // Execute the query
@@ -47,10 +47,13 @@ const FindRoutes = () => {
 
         try {
             // Add a new document with a generated id to the "recentSearches" collection
-            await addDoc(collection(firestore, 'recentSearches'), newSearch);
+            const docRef = await addDoc(collection(firestore, 'recentSearches'), newSearch);
 
-            // Update local state
-            setRecentSearches(prevSearches => [newSearch, ...prevSearches].slice(0, 8));
+            // Create a new search object including the id
+            const addedSearch = { ...newSearch, id: docRef.id };
+
+            // Update local state with the new search including the id
+            setRecentSearches(prevSearches => [addedSearch, ...prevSearches].slice(0, 10));
 
             // Direct to Google Maps
             redirectToGoogleMaps(startLocation, destination);
