@@ -1,71 +1,134 @@
-import React, { useRef, useState } from "react"
-import { Form, Button, Card, Alert, Container } from "react-bootstrap"
-import { useAuth } from "../../contexts/AuthContext"
-import { useNavigate } from "react-router"
-import { Link } from "react-router-dom"
+import React, { useRef, useState } from "react";
+import { Form, Button, Card, Alert, Container } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Signup() {
-  const emailRef = useRef()
-  const passwordRef = useRef()
-  const passwordConfirmRef = useRef()
-  const { signup } = useAuth()
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const passwordConfirmRef = useRef();
+  const { signup } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   async function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError("Passwords do not match")
+      return setError("Passwords do not match");
     }
 
     try {
-      setError("")
-      setLoading(true)
-      await signup(emailRef.current.value, passwordRef.current.value)
-      navigate("/")
+      setError("");
+      setLoading(true);
+      await signup(emailRef.current.value, passwordRef.current.value);
+      navigate("/");
     } catch {
-      setError("Failed to create an account")
+      setError("Failed to create an account");
     }
 
-    setLoading(false)
+    setLoading(false);
   }
 
   return (
     <>
-      <Card>
-        <Container
-          className="d-flex align-items-center justify-content-center"
-          style={{ minHeight: "100vh" }}
-        >
-          <div className="w-100" style={{ maxWidth: "400px" }}>
-            <Card.Body>
-              <h2 className="text-center mb-4">Sign Up</h2>
-              {error && <Alert variant="danger">{error}</Alert>}
-              <Form onSubmit={handleSubmit}>
-                <Form.Group id="email">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" ref={emailRef} required />
-                </Form.Group>
-                <Form.Group id="password">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" ref={passwordRef} required />
-                </Form.Group>
-                <Form.Group id="password-confirm">
-                  <Form.Label>Password Confirmation</Form.Label>
-                  <Form.Control type="password" ref={passwordConfirmRef} required />
-                </Form.Group>
-                <Button disabled={loading} className="w-100 mt-3" type="submit">
-                  Sign Up
-                </Button>
-              </Form>
-            </Card.Body>
-            <div className="w-100 text-center mt-2">
-              Already have an account? <Link to="/login">Log In</Link>
+      <style>
+        {`
+          body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to top, #06dfc4, #abf9bd); // Update the gradient colors
+          }
+
+          .center-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+          }
+
+          .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .logo {
+            width: 225px;
+            margin-bottom: 10px;
+          }
+
+          .form-container {
+            width: 100%;
+            max-width: 400px; /* Adjust the max-width as needed */
+          }
+
+          .name-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #003e64;
+            margin-bottom: 15px;
+          }
+          
+          .name{
+            white-space: nowrap;
+            margin-bottom: 10px;
+          }
+
+          @media (max-width: 600px) {
+            .form-container {
+              max-width: 100%;
+            }
+          }
+        `}
+      </style>
+
+      <Container className="center-container">
+        <Card style={{ width: "90%" }}>
+          <Card.Body style={{ padding: "20px" }}>
+            <div className="content-container">
+              <div className="logo-container">
+                <div className="logo">
+                  <img src="/logo512.png" alt="Logo" style={{ width: "100%" }} />
+                  <div className="name-container">
+                    <h3 className="name">AccessiBus</h3>
+                    <h6 className="name">Ensuring accessible bus travel for everyone</h6>
+                  </div>
+                </div>
+              </div>
+              <div className="form-container">
+                <h2 className="text-center mb-4">Sign Up</h2>
+                {error && <Alert variant="danger">{error}</Alert>}
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group controlId="email">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control type="email" ref={emailRef} required />
+                  </Form.Group>
+                  <Form.Group controlId="password">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password" ref={passwordRef} required />
+                  </Form.Group>
+                  <Form.Group controlId="password-confirm">
+                    <Form.Label>Password Confirmation</Form.Label>
+                    <Form.Control type="password" ref={passwordConfirmRef} required />
+                  </Form.Group>
+                  <Button disabled={loading} className="w-100 mt-3" type="submit">
+                    Sign Up
+                  </Button>
+                </Form>
+                <div className="w-100 text-center mt-2">
+                  Already have an account? <Link to="/login">Log In</Link>
+                </div>
+                <div className="w-100 text-center mt-2">
+                  Sign in later <Link to="/">Home</Link>
+                </div>
+              </div>
             </div>
-          </div>
-        </Container>
-      </Card>
+          </Card.Body>
+        </Card>
+      </Container>
     </>
-  )
+  );
 }
