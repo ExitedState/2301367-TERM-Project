@@ -53,12 +53,10 @@ const FindRoutes = () => {
             setRecentSearches(prevSearches => [newSearch, ...prevSearches].slice(0, 8));
 
             // Direct to Google Maps
-            const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${startLocation}&destination=${destination}&travelmode=driving`;
-            window.open(googleMapsDirectionsUrl, '_blank');
+            redirectToGoogleMaps(startLocation, destination);
         } catch (error) {
             console.error("Error adding document: ", error);
         }
-        redirectToGoogleMaps(startLocation, destination);
     };
 
     const handleUseCurrentLocation = () => {
@@ -73,7 +71,7 @@ const FindRoutes = () => {
     };
 
     const redirectToGoogleMaps = (start, destination) => {
-        const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=driving`;
+        const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=transit`;
         window.open(googleMapsDirectionsUrl, '_blank');
     };
 
