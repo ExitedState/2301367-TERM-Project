@@ -132,6 +132,7 @@ const FindRoutes = () => {
                             <ListGroup.Item
                                 key={search.id || index}
                                 className="d-flex justify-content-between align-items-center"
+                                style={{ userSelect: 'none' }}
                             >
                                 <div onClick={() => handleRecentSearchSelect(search)} style={{ flex: 1, cursor: 'pointer' }}>
                                     <Row className="w-100">
