@@ -33,7 +33,7 @@ const FavoRoutes = () => {
     }, [currentUser]);
 
     const redirectToGoogleMaps = (start, destination) => {
-        const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=driving`;
+        const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(destination)}&travelmode=transit`;
         window.open(googleMapsDirectionsUrl, '_blank');
     };
 
