@@ -1,7 +1,15 @@
-body {
+html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
+}
+
+body {
     background: linear-gradient(to top, #06dfc4, #abf9bd);
+    min-height: 100vh;
+    /* Minimum height of 100% of the viewport height */
+    display: flex;
+    flex-direction: column;
 }
 
 .App-logo {
@@ -59,4 +67,7 @@ body {
     color: Azure;
 }
 
-
+.flex-grow-1 {
+    flex-grow: 1;
+    /* Allows the container to grow and fill the space */
+}
