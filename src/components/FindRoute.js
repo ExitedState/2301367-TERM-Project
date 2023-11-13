@@ -5,11 +5,14 @@ import { collection, addDoc, getDocs, query, where, orderBy, limit, updateDoc, d
 import { firestore } from '../config/firebase'; // adjust the path as necessary
 import { ListGroup, Button, Row, Col, InputGroup, FormControl, Card } from 'react-bootstrap';
 import { GeoAlt, Map } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
+
 const FindRoutes = () => {
     const { currentUser } = useAuth();
     const [startLocation, setStartLocation] = useState('');
     const [destination, setDestination] = useState('');
     const [recentSearches, setRecentSearches] = useState([]);
+
 
     useEffect(() => {
         if (currentUser) {
@@ -101,9 +104,19 @@ const FindRoutes = () => {
 
     return (
         <div>
-            <h1>Find Routes</h1>
+          <div className="my-3 mx-auto" style={{ maxWidth: '1400px' }}>
+            <div style={{ background: 'none', display: 'flex', justifyContent: 'end' }}>
+                <Link to="/">
+                    <Button variant="outline-success" className="mx-2">Home</Button>
+                </Link>
+                <Link to="/favoRoute">
+                    <Button variant="outline-success" className="mx-2">Favorite</Button>
+                </Link>
+            </div>
+         </div>
             <Card className="my-3 mx-auto" style={{ maxWidth: '888px' }}>
                 <Card.Body>
+                    
                     <InputGroup className="mb-3">
                         <FormControl
                             placeholder="Start Location"
