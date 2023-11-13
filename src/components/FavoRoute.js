@@ -4,6 +4,7 @@ import { collection, getDocs, query, where, orderBy, updateDoc, doc } from 'fire
 import { firestore } from '../config/firebase';
 import { ListGroup, Card, Button } from 'react-bootstrap';
 import { GeoAltFill } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 
 const FavoRoutes = () => {
     const { currentUser } = useAuth();
@@ -55,7 +56,16 @@ const FavoRoutes = () => {
     };
     return (
         <div>
-            <h1>Favorite Routes</h1>
+            <div className="my-3 mx-auto" style={{ maxWidth: '1400px' }}>
+                <div style={{ background: 'none', display: 'flex', justifyContent: 'end' }}>
+                    <Link to="/">
+                        <Button variant="outline-success" className="mx-2">Home</Button>
+                    </Link>
+                    <Link to="/findRoute">
+                        <Button variant="outline-success" className="mx-2">FindBus</Button>
+                    </Link>
+                </div>
+            </div>
             <Card className="my-3 mx-auto" style={{ maxWidth: '888px' }}>
                 <Card.Body>
                     <ListGroup>
