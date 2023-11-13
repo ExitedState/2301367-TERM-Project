@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import logo from '../../imgs/logo.png';
 
 export default function Signup() {
   const emailRef = useRef();
@@ -91,9 +92,9 @@ export default function Signup() {
             <div className="content-container">
               <div className="logo-container">
                 <div className="logo">
-                  <img src="/logo512.png" alt="Logo" style={{ width: "100%" }} />
+                  <img src={logo} alt="Logo" style={{ width: "100%" }} />
                   <div className="name-container">
-                    <h3 className="name">AccessiBus</h3>
+                    {/* <h3 className="name">AccessiBus</h3> */}
                     <h6 className="name">Ensuring accessible bus travel for everyone</h6>
                   </div>
                 </div>
