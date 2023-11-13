@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to top, #06dfc4, #abf9bd);
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+.app-logo {
+    width: 50px;
+    /* Adjust as needed */
+    height: auto;
+}
+
+.app-name {
+    color: black;
+    /* Additional styling */
+}
+
+.main-heading {
+    color: white;
+    font-size: 2.5rem;
+    /* Adjust as needed */
+    /* Additional responsive styling */
+}
+
+.bus-image {
+    width: 150px;
+    /* Adjust as needed */
+    height: auto;
+    /* Additional responsive styling */
+}
+
+.tagline {
+    color: black;
+    font-size: 1.25rem;
+    /* Adjust as needed */
+    /* Additional responsive styling */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-heading {
+        font-size: 2rem;
+        /* Smaller font size for smaller devices */
+    }
+
+    .tagline {
+        font-size: 1rem;
+    }
+
+    /* Other responsive adjustments as needed */
+}
+
+.text-Color {
+    color: Azure;
+}
+
+
