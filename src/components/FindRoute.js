@@ -4,15 +4,17 @@ import { useAuth } from '../contexts/AuthContext'; // adjust the path as necessa
 import { collection, addDoc, getDocs, query, where, orderBy, limit, updateDoc, doc } from 'firebase/firestore';
 import { firestore } from '../config/firebase'; // adjust the path as necessary
 import { ListGroup, Button, Row, Col, InputGroup, FormControl, Card } from 'react-bootstrap';
+import { Toast, ToastContainer } from 'react-bootstrap';
 import { GeoAlt, Map } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
+import logo from '../imgs/logo.png';
 const FindRoutes = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, logout } = useAuth();
     const [startLocation, setStartLocation] = useState('');
     const [destination, setDestination] = useState('');
     const [recentSearches, setRecentSearches] = useState([]);
-
+    const navigate = useNavigate();
+    const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
         if (currentUser) {
@@ -111,19 +113,50 @@ const FindRoutes = () => {
             console.error("Error updating favorite status: ", error);
         }
     };
-
+    const handleLogout = async () => {
+        try {
+            await logout();
+            setShowToast(true);
+            navigate('/');
+        } catch (error) {
+            console.error("Failed to log out", error);
+            // Handle logout error (e.g., show an error message)
+        }
+    };
     return (
         <div>
-            <div className="my-3 mx-auto" style={{ maxWidth: '1400px' }}>
-                <div style={{ background: 'none', display: 'flex', justifyContent: 'end' }}>
-                    <Link to="/">
-                        <Button variant="outline-success" className="mx-2">Home</Button>
-                    </Link>
-                    <Link to="/favoRoute">
-                        <Button variant="outline-success" className="mx-2">Favorite</Button>
-                    </Link>
-                </div>
-            </div>
+            {/* Header - similar to MainPage */}
+            <Row className="mt-5 mx-auto" style={{ maxWidth: '1400px' }}>
+                <Col xs={12} md={4} lg={3} className="text-center text-md-left">
+                    <img src={logo} alt="Logo" className="img-fluid" style={{ maxWidth: '120px' }} />
+                </Col>
+                <Col xs={12} md={8} lg={9} className="d-flex align-items-center justify-content-md-end">
+                    {!currentUser ? (
+                        <>
+                            <Link to="/login">
+                                <Button variant="outline-success" className="mx-2">Login</Button>
+                            </Link>
+                            <Link to="/signup">
+                                <Button variant="outline-success" className="mx-2">Register</Button>
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/">
+                                <Button variant="outline-success" className="mx-2">Home</Button>
+                            </Link>
+                            <Link to="/favoRoute">
+                                <Button variant="outline-success" className="mx-2">Favorite</Button>
+                            </Link>
+                            <Link to="/update-profile">
+                                <Button variant="outline-success" className="mx-2">Profile</Button>
+                            </Link>
+                            <Button variant="outline-danger" className="mx-2" onClick={handleLogout}>Logout</Button>
+
+                        </>
+                    )}
+                </Col>
+            </Row>
             <Card className="my-3 mx-auto" style={{ maxWidth: '888px' }}>
                 <Card.Body>
 
@@ -190,7 +223,19 @@ const FindRoutes = () => {
                     </ListGroup>
                 </Card.Body>
             </Card>
+            <div>
+                {/* Toast Container for logout success message */}
+                <ToastContainer className="p-3" position="top-end">
+                    <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
+                        <Toast.Header>
+                            <strong className="me-auto">Logout Successful</strong>
+                        </Toast.Header>
+                        <Toast.Body>You have been logged out.</Toast.Body>
+                    </Toast>
+                </ToastContainer>
+            </div>
         </div>
+
     );
 };
 

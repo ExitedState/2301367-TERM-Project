@@ -2,14 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, getDocs, query, where, orderBy, updateDoc, doc } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
-import { ListGroup, Card, Button } from 'react-bootstrap';
+import { ListGroup, Card, Button, Row, Col } from 'react-bootstrap';
 import { GeoAltFill } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
+import { Toast, ToastContainer } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import logo from '../imgs/logo.png';
 
 const FavoRoutes = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, logout } = useAuth();
     const [favoriteRoutes, setFavoriteRoutes] = useState([]);
+    const navigate = useNavigate();
+    const [showToast, setShowToast] = useState(false);
 
+    const handleLogout = async () => {
+        try {
+            await logout();
+            setShowToast(true);
+            navigate('/');
+        } catch (error) {
+            console.error("Failed to log out", error);
+            // Handle logout error (e.g., show an error message)
+        }
+    };
     useEffect(() => {
         if (currentUser) {
             const favoritesQuery = query(
@@ -56,16 +70,38 @@ const FavoRoutes = () => {
     };
     return (
         <div>
-            <div className="my-3 mx-auto" style={{ maxWidth: '1400px' }}>
-                <div style={{ background: 'none', display: 'flex', justifyContent: 'end' }}>
-                    <Link to="/">
-                        <Button variant="outline-success" className="mx-2">Home</Button>
-                    </Link>
-                    <Link to="/findRoute">
-                        <Button variant="outline-success" className="mx-2">FindBus</Button>
-                    </Link>
-                </div>
-            </div>
+            {/* Header - similar to MainPage */}
+            <Row className="mt-5 mx-auto" style={{ maxWidth: '1400px' }}>
+                <Col xs={12} md={4} lg={3} className="text-center text-md-left">
+                    <img src={logo} alt="Logo" className="img-fluid" style={{ maxWidth: '120px' }} />
+                </Col>
+                <Col xs={12} md={8} lg={9} className="d-flex align-items-center justify-content-md-end">
+                    {!currentUser ? (
+                        <>
+                            <Link to="/login">
+                                <Button variant="outline-success" className="mx-2">Login</Button>
+                            </Link>
+                            <Link to="/signup">
+                                <Button variant="outline-success" className="mx-2">Register</Button>
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/">
+                                <Button variant="outline-success" className="mx-2">Home</Button>
+                            </Link>
+                            <Link to="/findRoute">
+                                <Button variant="outline-success" className="mx-2">FindBus</Button>
+                            </Link>
+                            <Link to="/update-profile">
+                                <Button variant="outline-success" className="mx-2">Profile</Button>
+                            </Link>
+                            <Button variant="outline-danger" className="mx-2" onClick={handleLogout}>Logout</Button>
+                            {/* Include Logout Button if needed */}
+                        </>
+                    )}
+                </Col>
+            </Row>
             <Card className="my-3 mx-auto" style={{ maxWidth: '888px' }}>
                 <Card.Body>
                     <ListGroup>
@@ -75,7 +111,7 @@ const FavoRoutes = () => {
                                 className="d-flex justify-content-between align-items-center"
                                 style={{ userSelect: 'none' }}
                             >
-                                <div className="me-auto" onClick={() => redirectToGoogleMaps(route.startLocation, route.destination)} style={{flex:1,cursor: 'pointer'}}>
+                                <div className="me-auto" onClick={() => redirectToGoogleMaps(route.startLocation, route.destination)} style={{ flex: 1, cursor: 'pointer' }}>
                                     <div className="fw-bold">From: <GeoAltFill /> {route.startLocation}</div>
                                     <div>To: <GeoAltFill /> {route.destination}</div>
                                 </div>
@@ -90,6 +126,17 @@ const FavoRoutes = () => {
                     </ListGroup>
                 </Card.Body>
             </Card>
+            <div>
+                {/* Toast Container for logout success message */}
+                <ToastContainer className="p-3" position="top-end">
+                    <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
+                        <Toast.Header>
+                            <strong className="me-auto">Logout Successful</strong>
+                        </Toast.Header>
+                        <Toast.Body>You have been logged out.</Toast.Body>
+                    </Toast>
+                </ToastContainer>
+            </div>
         </div>
     );
 };
