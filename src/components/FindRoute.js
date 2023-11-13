@@ -67,9 +67,19 @@ const FindRoutes = () => {
 
     const handleUseCurrentLocation = () => {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
+            navigator.geolocation.getCurrentPosition(async (position) => {
                 const currentLocation = `${position.coords.latitude},${position.coords.longitude}`;
-                setStartLocation(currentLocation);
+                const googleMapsApiKey = process.env.GOOGLE_MAP_API_KEY;
+                const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentLocation}&key=${googleMapsApiKey}`;
+                try {
+                    const response = await fetch(geocodingApiUrl);
+                    const data = await response.json();
+                    const placeName = data.results[0].formatted_address; // Get the formatted address from the first result
+                    setStartLocation(placeName);
+                } catch (error) {
+                    console.error("Error fetching place name: ", error);
+                    setStartLocation(currentLocation); // Fallback to coordinates if API call fails
+                }
             });
         } else {
             alert('Geolocation is not supported by this browser.');
@@ -104,19 +114,19 @@ const FindRoutes = () => {
 
     return (
         <div>
-          <div className="my-3 mx-auto" style={{ maxWidth: '1400px' }}>
-            <div style={{ background: 'none', display: 'flex', justifyContent: 'end' }}>
-                <Link to="/">
-                    <Button variant="outline-success" className="mx-2">Home</Button>
-                </Link>
-                <Link to="/favoRoute">
-                    <Button variant="outline-success" className="mx-2">Favorite</Button>
-                </Link>
+            <div className="my-3 mx-auto" style={{ maxWidth: '1400px' }}>
+                <div style={{ background: 'none', display: 'flex', justifyContent: 'end' }}>
+                    <Link to="/">
+                        <Button variant="outline-success" className="mx-2">Home</Button>
+                    </Link>
+                    <Link to="/favoRoute">
+                        <Button variant="outline-success" className="mx-2">Favorite</Button>
+                    </Link>
+                </div>
             </div>
-         </div>
             <Card className="my-3 mx-auto" style={{ maxWidth: '888px' }}>
                 <Card.Body>
-                    
+
                     <InputGroup className="mb-3">
                         <FormControl
                             placeholder="Start Location"
@@ -151,14 +161,14 @@ const FindRoutes = () => {
                                 <div onClick={() => handleRecentSearchSelect(search)} style={{ flex: 1, cursor: 'pointer' }}>
                                     <Row className="w-100">
                                         <Col xs={12} md={6} className="d-flex align-items-center">
-                                            <GeoAlt className="icon-style me-2" />
+                                            <div><GeoAlt className="me-2" style={{ fontSize: '1.2rem' }} /></div>
                                             <div className="flex-fill">
                                                 <div className="fw-bold">From:</div>
                                                 <span>{search.startLocation}</span>
                                             </div>
                                         </Col>
                                         <Col xs={12} md={6} className="d-flex align-items-center mt-2 mt-md-0">
-                                            <Map className="icon-style me-2" />
+                                            <div><Map className="me-2" style={{ fontSize: '1.2rem' }} /></div>
                                             <div className="flex-fill">
                                                 <div className="fw-bold">To:</div>
                                                 <span>{search.destination}</span>
