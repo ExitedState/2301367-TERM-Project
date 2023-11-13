@@ -8,6 +8,7 @@ import { Toast, ToastContainer } from 'react-bootstrap';
 import { GeoAlt, Map } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../imgs/logo.png';
+
 const FindRoutes = () => {
     const { currentUser, logout } = useAuth();
     const [startLocation, setStartLocation] = useState('');
@@ -71,11 +72,11 @@ const FindRoutes = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 const currentLocation = `${position.coords.latitude},${position.coords.longitude}`;
-                const googleMapsApiKey = process.env.GOOGLE_MAP_API_KEY;
-                const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentLocation}&key=${googleMapsApiKey}`;
+                const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentLocation}&key=AIzaSyB8Egpx-NvuZWmWVtenV7zSzpaBsCcZdA4`;
                 try {
                     const response = await fetch(geocodingApiUrl);
                     const data = await response.json();
+                    console.log(data);  // Check what the API returned
                     const placeName = data.results[0].formatted_address; // Get the formatted address from the first result
                     setStartLocation(placeName);
                 } catch (error) {
@@ -157,9 +158,8 @@ const FindRoutes = () => {
                     )}
                 </Col>
             </Row>
-            <Card className="my-3 mx-auto" style={{ maxWidth: '888px' }}>
+            <Card className="my-3 mx-auto" style={{ maxWidth: '95%' }}>
                 <Card.Body>
-
                     <InputGroup className="mb-3">
                         <FormControl
                             placeholder="Start Location"
@@ -168,7 +168,7 @@ const FindRoutes = () => {
                             onChange={(e) => setStartLocation(e.target.value)}
                         />
                         <Button variant="outline-secondary" onClick={(e) => {
-                            e.preventDefault();  // Prevent default button click behavior
+                            e.preventDefault();
                             handleUseCurrentLocation();
                         }}>
                             <GeoAlt />
@@ -179,11 +179,11 @@ const FindRoutes = () => {
                             value={destination}
                             onChange={(e) => setDestination(e.target.value)}
                         />
-                        <Button variant="primary" onClick={handleFindRoute}>
+                        <Button variant="primary" className="btn-lg" onClick={handleFindRoute}>
                             Find Route
                         </Button>
                     </InputGroup>
-                    <h2>Recent Searches</h2>
+                    <h2 className="fs-3 fs-md-2">Recent Searches</h2>
                     <ListGroup>
                         {recentSearches.map((search, index) => (
                             <ListGroup.Item
@@ -223,6 +223,7 @@ const FindRoutes = () => {
                     </ListGroup>
                 </Card.Body>
             </Card>
+
             <div>
                 {/* Toast Container for logout success message */}
                 <ToastContainer className="p-3" position="top-end">
