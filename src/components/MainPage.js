@@ -4,7 +4,7 @@ import { Button, Container, Row, Col } from 'react-bootstrap';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import './MainPage.css';
 import { useAuth } from '../contexts/AuthContext'; // Adjust the path as necessary
-import logo from '../imgs/logo.svg';
+import logo from '../imgs/logo.png';
 import bus from '../imgs/bus.png';
 
 export default function MainPage() {
@@ -29,7 +29,7 @@ export default function MainPage() {
                 <Row className="mt-5">
                     <Col xs={12} md={4} lg={3} className="text-center text-md-left">
                         <img src={logo} alt="Logo" className="img-fluid" style={{ maxWidth: '120px' }} />
-                        <p class="text-Color">· AccessiBus ·</p>
+                        {/* <p class="text-Color">· AccessiBus ·</p> */}
                     </Col>
                     <Col xs={12} md={8} lg={9} className="d-flex align-items-center justify-content-md-end">
                         {!currentUser ? (
