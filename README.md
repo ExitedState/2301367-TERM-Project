@@ -7,19 +7,6 @@ Team Member :
 
 A - Kan - Auto - Peach - Most - Win - Pun
 
-## Installation and Setup Instructions
-
-Clone down this repository. You will need `node` and `npm` installed globally on your machine.
-
-NodeJs : [Download here](https://nodejs.org/en/download)
-
-Installation:
-
-`npm install`
-
-To Start Server:
-
-`npm start`
 
 ## Setup environment
 
@@ -36,3 +23,17 @@ REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
 REACT_APP_FIREBASE_APP_ID=
 REACT_APP_FIREBASE_MEASUREMENT_ID=
 ```
+
+## Installation and Setup Instructions
+
+Clone down this repository. You will need `node` and `npm` installed globally on your machine.
+
+NodeJs : [Download here](https://nodejs.org/en/download)
+
+Installation:
+
+`npm install`
+
+To Start Server:
+
+`npm start`
