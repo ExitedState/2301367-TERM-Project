@@ -3,6 +3,8 @@
 Project Plan Description:
 <https://docs.google.com/document/d/1PSNCxRnPDma89StpPpfi4b8uLvwoKKs7M4R_WKJKiU4/edit>
 
+Demo : https://2301367termproject.netlify.app/
+
 Team Member :
 
 A - Kan - Auto - Peach - Most - Win - Pun
