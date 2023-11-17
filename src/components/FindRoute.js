@@ -72,7 +72,7 @@ const FindRoutes = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 const currentLocation = `${position.coords.latitude},${position.coords.longitude}`;
-                const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentLocation}&key=AIzaSyB8Egpx-NvuZWmWVtenV7zSzpaBsCcZdA4`;
+                const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentLocation}&key=useYOUgoogleMapAPIforGeoLocationHere`;
                 try {
                     const response = await fetch(geocodingApiUrl);
                     const data = await response.json();
